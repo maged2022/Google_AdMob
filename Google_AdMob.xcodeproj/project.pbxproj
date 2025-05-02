@@ -14,22 +14,9 @@
 		260060E32DC5255700ECB32B /* Google_AdMob.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Google_AdMob.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		260060F82DC5285500ECB32B /* Exceptions for "Google_AdMob" folder in "Google_AdMob" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				"Google-AdMob-Info.plist",
-			);
-			target = 260060E22DC5255700ECB32B /* Google_AdMob */;
-		};
-/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
-
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		260060E52DC5255700ECB32B /* Google_AdMob */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-				260060F82DC5285500ECB32B /* Exceptions for "Google_AdMob" folder in "Google_AdMob" target */,
-			);
 			path = Google_AdMob;
 			sourceTree = "<group>";
 		};
