@@ -11,7 +11,7 @@ import SwiftUI
 struct Google_AdMobApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView2()
         }
     }
 }

@@ -54,3 +54,99 @@ struct BannerAdView: UIViewRepresentable {
         // No updates needed
     }
 }
+
+
+
+import GoogleMobileAds
+import SwiftUI
+
+class RewardedAdManager: NSObject, ObservableObject, FullScreenContentDelegate {
+    private var rewardedAd: RewardedAd?
+    @Published var isAdReady = false
+
+    // Replace with your actual AdMob Rewarded Ad Unit ID
+    let adUnitID = "ca-app-pub-3940256099942544/1712485313" // Test ID
+
+    override init() {
+        super.init()
+        loadAd()
+    }
+
+    func loadAd() {
+        let request = Request()
+        // Correct method to load the RewardedAd
+        RewardedAd.load(with: adUnitID, request: request) { [weak self] ad, error in
+            if let error = error {
+                print("❌ Failed to load rewarded ad: \(error.localizedDescription)")
+                self?.isAdReady = false
+                return
+            }
+
+            self?.rewardedAd = ad
+            self?.rewardedAd?.fullScreenContentDelegate = self
+            self?.isAdReady = true
+            print("✅ Rewarded ad is ready")
+        }
+    }
+
+    func showAd(from rootViewController: UIViewController, onReward: @escaping () -> Void) {
+        guard let ad = rewardedAd else {
+            print("🚫 Ad not ready")
+            return
+        }
+
+        // Correct method for presenting the RewardedAd
+        ad.present(from: rootViewController) {
+            let reward = ad.adReward
+            print("🎁 User rewarded with: \(reward.amount) \(reward.type)")
+            onReward()
+        }
+    }
+
+    // MARK: - FullScreenContentDelegate Methods
+    func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
+        print("ℹ️ Ad dismissed")
+        loadAd() // Reload for next time
+    }
+
+    func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        print("❌ Ad failed to present: \(error.localizedDescription)")
+        loadAd()
+    }
+}
+
+
+struct ContentView2: View {
+    var body: some View {
+        VStack {
+            Spacer()
+            Text("Welcome to the VPN App")
+                .font(.title)
+            Spacer()
+            RewardAdButton()
+        }
+        .padding()
+    }
+}
+
+struct RewardAdButton: View {
+    @StateObject private var adManager = RewardedAdManager()
+
+    var body: some View {
+        Button("Watch Ad to Get Reward") {
+            if let rootVC = UIApplication.shared.connectedScenes
+                .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController })
+                .first {
+                adManager.showAd(from: rootVC) {
+                    // Handle the reward logic here
+                    print("🎉 Reward granted to user!")
+                }
+            }
+        }
+        .disabled(!adManager.isAdReady)
+        .padding()
+        .background(adManager.isAdReady ? Color.green : Color.gray)
+        .foregroundColor(.white)
+        .cornerRadius(10)
+    }
+}
