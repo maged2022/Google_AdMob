@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var rewardVM = RewardAdViewModel(adService: RewardedService())
-    @StateObject private var interstitialVM = InterstitialAdViewModel()
+    @StateObject private var interstitialVM = InterstitialAdViewModel(adService: InterstitialService())
 
     var body: some View {
         NavigationView {
