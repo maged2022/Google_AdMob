@@ -9,16 +9,37 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Spacer()
-            Text("VPN App Home")
-                .font(.title)
-            Spacer()
-            BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") // AdMob test banner
-                .frame(height: 50)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal)
+        NavigationView{
+            VStack {
+                
+                VStack {
+                    
+                    Text("Reward Example")
+                        .font(.title2)
+                        .bold()
+                    
+                    RewardAdButton()
+                }
+                .padding(.top)
+                .padding(.top)
+                .padding(.top)
+                Spacer()
+                VStack {
+                    
+                    Text("Banner Example")
+                        .font(.title2)
+                        .bold()
+                    BannerAdView(adUnitID: "ca-app-pub-3940256099942544/2934735716") // AdMob test banner
+                        .frame(height: 50)
+                        .frame(maxWidth: .infinity)
+                }
+                .padding(.vertical)
+            }
+            
+            .padding()
+            .navigationTitle("Google AdMob")
         }
+        
     }
 }
 
@@ -31,25 +52,25 @@ import GoogleMobileAds
 
 struct BannerAdView: UIViewRepresentable {
     var adUnitID: String
-
+    
     func makeUIView(context: Context) -> BannerView {
         // ✅ Create AdSize with UInt flag = 0
         let adSize = AdSize(size: CGSize(width: 320, height: 50), flags: 0)
         let bannerView = BannerView(adSize: adSize)
         bannerView.adUnitID = adUnitID
-
+        
         // ✅ Set rootViewController
         if let rootViewController = UIApplication.shared.connectedScenes
             .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController })
             .first {
             bannerView.rootViewController = rootViewController
         }
-
+        
         // ✅ Load ad
         bannerView.load(Request())
         return bannerView
     }
-
+    
     func updateUIView(_ uiView: BannerView, context: Context) {
         // No updates needed
     }
@@ -60,18 +81,18 @@ struct BannerAdView: UIViewRepresentable {
 import GoogleMobileAds
 import SwiftUI
 
-class RewardedAdManager: NSObject, ObservableObject, FullScreenContentDelegate {
+class RewardedAdManager: NSObject, ObservableObject {
     private var rewardedAd: RewardedAd?
     @Published var isAdReady = false
-
+    
     // Replace with your actual AdMob Rewarded Ad Unit ID
     let adUnitID = "ca-app-pub-3940256099942544/1712485313" // Test ID
-
+    
     override init() {
         super.init()
         loadAd()
     }
-
+    
     func loadAd() {
         let request = Request()
         // Correct method to load the RewardedAd
@@ -81,20 +102,20 @@ class RewardedAdManager: NSObject, ObservableObject, FullScreenContentDelegate {
                 self?.isAdReady = false
                 return
             }
-
+            
             self?.rewardedAd = ad
             self?.rewardedAd?.fullScreenContentDelegate = self
             self?.isAdReady = true
             print("✅ Rewarded ad is ready")
         }
     }
-
+    
     func showAd(from rootViewController: UIViewController, onReward: @escaping () -> Void) {
         guard let ad = rewardedAd else {
             print("🚫 Ad not ready")
             return
         }
-
+        
         // Correct method for presenting the RewardedAd
         ad.present(from: rootViewController) {
             let reward = ad.adReward
@@ -102,36 +123,26 @@ class RewardedAdManager: NSObject, ObservableObject, FullScreenContentDelegate {
             onReward()
         }
     }
+    
+  
+}
 
-    // MARK: - FullScreenContentDelegate Methods
+// MARK: - FullScreenContentDelegate Methods
+extension RewardedAdManager: FullScreenContentDelegate {
     func adDidDismissFullScreenContent(_ ad: FullScreenPresentingAd) {
         print("ℹ️ Ad dismissed")
         loadAd() // Reload for next time
     }
-
+    
     func ad(_ ad: FullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
         print("❌ Ad failed to present: \(error.localizedDescription)")
         loadAd()
     }
 }
 
-
-struct ContentView2: View {
-    var body: some View {
-        VStack {
-            Spacer()
-            Text("Welcome to the VPN App")
-                .font(.title)
-            Spacer()
-            RewardAdButton()
-        }
-        .padding()
-    }
-}
-
 struct RewardAdButton: View {
     @StateObject private var adManager = RewardedAdManager()
-
+    
     var body: some View {
         Button("Watch Ad to Get Reward") {
             if let rootVC = UIApplication.shared.connectedScenes
