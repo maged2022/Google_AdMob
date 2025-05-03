@@ -9,7 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var rewardVM = RewardAdViewModel(adService: RewardedService())
-    
+    @StateObject private var interstitialVM = InterstitialAdViewModel()
+
     var body: some View {
         NavigationView {
             VStack(spacing: 32) {
@@ -19,14 +20,21 @@ struct ContentView: View {
                         .bold()
                     RewardAdButton(viewModel: rewardVM)
                 }
-                
+
+                VStack {
+                    Text("Interstitial Example")
+                        .font(.title2)
+                        .bold()
+                    InterstitialAdButton(viewModel: interstitialVM)
+                }
+
                 Spacer()
-                
+
                 VStack {
                     Text("Banner Example")
                         .font(.title2)
                         .bold()
-                    BannerAdView(adUnitID: AdConstant.bannerUnitID)
+                    BannerAdView(adUnitID: AdConfig.bannerUnitID)
                         .frame(height: 50)
                         .frame(maxWidth: .infinity)
                 }

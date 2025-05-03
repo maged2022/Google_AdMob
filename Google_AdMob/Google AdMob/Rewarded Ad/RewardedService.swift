@@ -29,7 +29,7 @@ final class RewardedService: NSObject, RewardedAdServiceDelegate {
         isAdReadySubject.eraseToAnyPublisher()
     }
     
-    init(adUnitID: String = AdConstant.rewardedUnitID) {
+    init(adUnitID: String = AdConfig.rewardedUnitID) {
         self.adUnitID = adUnitID
         super.init()
         loadAd()
