@@ -7,7 +7,7 @@
 
 
 struct AdConfig {
-    static let bannerUnitID = "ca-app-pub-3940256099942544/2934735716" // Test
+    static let bannerUnitID = "ca-app-pub-3940256099942544/2435281174" // Test
     static let rewardedUnitID = "ca-app-pub-3940256099942544/1712485313" // Test
     static let interstitialUnitID = "ca-app-pub-3940256099942544/4411468910" // Test ID
 

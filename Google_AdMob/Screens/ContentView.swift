@@ -34,8 +34,7 @@ struct ContentView: View {
                     Text("Banner Example")
                         .font(.title2)
                         .bold()
-                    BannerAdView(adUnitID: AdConfig.bannerUnitID)
-                        .frame(height: 50)
+                    ResponsiveBannerAdView(adUnitID: AdConfig.bannerUnitID)
                         .frame(maxWidth: .infinity)
                 }
             }
