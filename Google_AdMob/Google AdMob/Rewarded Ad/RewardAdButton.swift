@@ -7,23 +7,28 @@
 
 import SwiftUI
 
-struct RewardAdButton: View {
+struct RewardAdButton<Content: View>: View {
     @ObservedObject var viewModel: RewardAdViewModel
-    
+    let content: () -> Content
+    let onReward: () -> Void // 👈 New: Closure passed from HomeView
+
+    init(viewModel: RewardAdViewModel, onReward: @escaping () -> Void, @ViewBuilder content: @escaping () -> Content) {
+        self.viewModel = viewModel
+        self.onReward = onReward
+        self.content = content
+    }
+
     var body: some View {
-        Button("Watch Ad to Get Reward") {
+        Button(action: {
             if let vc = UIApplication.shared.rootViewController {
-                viewModel.showAd(from: vc)
+                viewModel.showAd(from: vc, onReward: onReward) // 👈 Pass it to ViewModel
             }
+        }) {
+            content()
         }
         .disabled(!viewModel.isAdReady)
-        .padding()
-        .background(viewModel.isAdReady ? Color.green : Color.gray)
-        .foregroundColor(.white)
-        .cornerRadius(10)
     }
 }
-
 
 //#Preview {
 //    RewardAdButton(viewModel: Re)

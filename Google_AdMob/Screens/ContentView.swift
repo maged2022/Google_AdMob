@@ -8,9 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var rewardVM = RewardAdViewModel(adService: RewardedService())
+    @StateObject private var rewardAdViewModel = RewardAdViewModel(adService: RewardedService())
     @StateObject private var interstitialVM = InterstitialAdViewModel(adService: InterstitialService())
-
+    
     var body: some View {
         NavigationView {
             VStack(spacing: 32) {
@@ -18,18 +18,41 @@ struct ContentView: View {
                     Text("Reward Example")
                         .font(.title2)
                         .bold()
-                    RewardAdButton(viewModel: rewardVM)
+                    
+                    RewardAdButton(viewModel: rewardAdViewModel, onReward: {
+                        // Rewarded here
+                        print("Prize from Rewarded Add...")
+                    }) {
+                        HStack {
+                            Image(systemName: "gift.fill") // You can also use a custom asset
+                                .foregroundColor(.blue)
+                            
+                            Text("Watch Ad to Earn 500MB")
+                                .font(.subheadline)
+                                .fontWeight(.bold)
+                        }
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(rewardAdViewModel.isAdReady ? Color.blue.opacity(0.4) : Color.gray.opacity(0.2))
+                        .foregroundColor(.black)
+                        .cornerRadius(12)
+                    }
                 }
-
+                .padding(.top)
+                Divider()
+                    .frame(height: 1)
+                    .background(.black)
+                    
+                
                 VStack {
                     Text("Interstitial Example")
                         .font(.title2)
                         .bold()
                     InterstitialAdButton(viewModel: interstitialVM)
                 }
-
+                
                 Spacer()
-
+                
                 VStack {
                     Text("Banner Example")
                         .font(.title2)
@@ -42,4 +65,7 @@ struct ContentView: View {
             .navigationTitle("Google AdMob")
         }
     }
+}
+#Preview {
+    ContentView()
 }

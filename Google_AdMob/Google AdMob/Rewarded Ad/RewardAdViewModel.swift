@@ -19,10 +19,10 @@ final class RewardAdViewModel: ObservableObject {
         observeAdAvailability()
     }
     
-    func showAd(from viewController: UIViewController) {
+    func showAd(from viewController: UIViewController, onReward: @escaping () -> Void) {
         adService.showAd(from: viewController) {
             print("🎉 Reward granted")
-            // ✅ Handle reward (e.g., give 500MB VPN credit)
+            onReward() // 👈 This gets called when the user finishes watching the ad
         }
     }
     
@@ -32,4 +32,3 @@ final class RewardAdViewModel: ObservableObject {
             .assign(to: &$isAdReady)
     }
 }
-
